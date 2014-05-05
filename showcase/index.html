@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title></title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
+
+        <link rel="stylesheet" href="css/normalize.css">
+        <link rel="stylesheet" href="css/main.css">
+    </head>
+    <body ng-app="app">
+        <!--[if lt IE 8]>
+            <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+        <![endif]-->        
+        
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/2.4.1/lodash.min.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.3/angular.min.js"></script>
+        <script src="../SharedDataService.js"></script>
+        <script src="js/main.js"></script>
+
+        <!-- Add your site or application content here -->
+        <h1>SharedDataService showcase</h1>
+        <div class="case">
+            <p><span>Case 1:</span>Two controllers setup a global shared data space namespaced as 'superhero'. The parent controller sets name, power, and weakness as the shared properties, while the child controller only sets the first two ones.</p>
+            <p> All three values are initialised inside the parent controller are are subsequently 2-way bound (since they are attached on the scopes of both controllers). Note how even though the child controller sets up a 'weakness' input on the shared data object, modifying it does not affect the parent controller's 'weakness' value: only the properties explicitly declared on the shared data initialisation are shared.</p></div>
+        <div ng-controller="parentSuperheroCtrl" ng-init="init('name,power,weakness')" ng-cloak>
+            <ul>
+                <li><h3>Parent superhero controller</h3></li>
+                <li><div shared-data-info accessor="superheroSharedDataAccessor"></div></li> 
+                <li><div shared-data-inputs accessor="superheroSharedDataAccessor" properties="name,power,weakness"><div></li> 
+                <li>
+                    <ul ng-controller="childSuperheroCtrl" ng-init="init('name,power')">
+                        <li><h3>Child superhero controller</h3></li>
+                        <li><div shared-data-info accessor="superheroSharedDataAccessor"></div></li> 
+                        <li><div shared-data-inputs accessor="superheroSharedDataAccessor" properties="name,power,weakness"></div></li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+        <div class="case">
+            <p><span>Case 2:</span>Two controllers set up shared data spaces that are 'scoped', both namespaced as 'soundMaker'. A scoped shared data service associates with the closest parent (or current) scope that has a matching '_sharedDataScopedNamespaceId' property. 
+            <p>Both the cat and dog controllers set this property to be 'soundMaker' on their own scopes, in effect allocating two separate shared data slots: dog controller scope 'soundMaker' and cat controller scope 'soundMaker'. Both controllers include an instance of a SoundMaker directive. On initialisation, each instance of this directive also sets up a 'soundMaker' scoped data service that associates with the respective parent controller. </p>
+            <p>This provides a convenient way to group and reuse components. In this example, the SoundMaker directive doesn't have any configuration: all it does is provide fixed behaviour (call a certain method that I expect to find in the shared data service that I subscribe to). The cat and dog controllers implement their own methods that each directive is able to call.  </p>
+            <!--p>More complex behaviour is readily possible. For example, an online store page that allows a user to select and add an item to their basket might have the following components: 1) an autosuggest box for entering an item, 2) a grid containing the item thumbnails, 3) pagination for the item thumbnails. The page controller would need <p-->
+        </div>
+        <div ng-controller="dogCtrl">
+            <ul>
+                <li><h3>Dog controller</h3></li>
+                <li><div shared-data-info accessor="soundMakerSharedDataAccessor"></div></li> 
+                <ul>
+                    <li><h4>Dog's SoundMaker directive</h4></li>
+                    <li><div sound-maker></div></li>                    
+                </ul>
+            <ul>
+        </div>
+        <div ng-controller="catCtrl">
+            <ul>
+                <li><h3>Cat controller</h3></li>
+                <li><div shared-data-info accessor="soundMakerSharedDataAccessor"></div></li> 
+                <ul>
+                    <li><h4>Cat's SoundMaker directive</h4></li>
+                    <li><div sound-maker></div></li>                    
+                </ul>
+            <ul>
+        </div>
+    </body>
+</html>
